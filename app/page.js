@@ -26,9 +26,9 @@ export default function Home() {
           {items.map((item, index)=>{
             const{name, price} = item;
             return(
-              <li key={index} className="my-4w-full flex justify-between">
-                <div>
-                  <span>{name}</span>
+              <li key={index} className="my-4 text-white w-full flex justify-between">
+                <div className="p-4 w-full flex justify-between">
+                  <span className="capitilaze">{name}</span>
                   <span>${price}</span>
                 </div>
                 <button>X</button>
