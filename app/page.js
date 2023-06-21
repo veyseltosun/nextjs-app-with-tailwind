@@ -2,7 +2,7 @@
 import React, {useState, useEffect} from "react"
 
 export default function Home() {
-  const [item, setItem] = useState([
+  const [items, setItems] = useState([
     {name:"Coffee", price:"4.95"},
     {name:"Movie", price:"24.95"},
     {name:"Candy", price:"7.95"},
@@ -22,9 +22,23 @@ export default function Home() {
           <input className='col-span-2 p-3 border mx-3' type="number" placeholder="Enter $"/>
           <button className="text-white bg-slate-950 hover:bg-slate-900 p-3 text-xl" type="submit"> + </button>
         </form>
+        <ul>
+          {items.map((item, index)=>{
+            const{name, price} = item;
+            return(
+              <li key={index} className="my-4w-full flex justify-between">
+                <div>
+                  <span>{name}</span>
+                  <span>${price}</span>
+                </div>
+                <button>X</button>
+              </li>
+            )
+
+          })}
+        </ul>
 
         </div>
-      
       </div>
     </main>
   )
