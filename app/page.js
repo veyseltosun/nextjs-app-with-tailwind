@@ -1,11 +1,13 @@
 "use client"
 import React, {useState, useEffect} from "react"
+import { db } from "./firebase"
+import { collection, addDoc, getDocs, onSnapshot, querySnapShot, query } from "firebase/firestore";
 
 export default function Home() {
   const [items, setItems] = useState([
-    {name:"Coffee", price:"4.95"},
-    {name:"Movie", price:"24.95"},
-    {name:"Candy", price:"7.95"},
+    // {name:"Coffee", price:"4.95"},
+    // {name:"Movie", price:"24.95"},
+    // {name:"Candy", price:"7.95"},
     
   ])
 
@@ -13,9 +15,28 @@ export default function Home() {
   const [total, setTotal] = useState(0);
   // add item to database
   const addItem = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
+    if(newItem.name !== "" && newItem.price !== "") {
+      // setItems([...items, newItem])
+      await addDoc(collection(db, "items"), {
+        name:newItem.name.trim(),
+        price:newItem.price,
+
+      });
+      setNewItem({name:"", price:"",})
+    }
   }
   // read item from database
+useEffect(() => {
+ const q = query(collection(db, "items"));
+ const unsubscribe = onSnapshot(q, (querySnapShot) => {
+  let itemsArr = []
+  querySnapShot.forEach((doc) => {
+    itemsArr.push({...doc.data(), id:doc.id})
+  });
+  setItems(itemsArr)
+ } )
+},[])
   // delete item from database
   return (
     <main className="flex min-h-screen flex-col items-center justify-between sm:p-24 p-24">
@@ -33,18 +54,25 @@ export default function Home() {
            value={newItem.price}
            onChange={(e)=> setNewItem({...newItem, price:e.target.value})}
           type="number" placeholder="Enter $"/>
-          <button className="text-white bg-slate-950 hover:bg-slate-900 p-3 text-xl" type="submit"> + </button>
+          <button className="text-white bg-slate-950 hover:bg-slate-900 p-3 text-xl"
+           onClick={addItem}
+           type="submit"> + </button>
         </form>
         <ul>
-          {items.map((item, index)=>{
-            const{name, price} = item;
+          {items?.map((item, index)=>{
+          
             return(
               <li key={index} className="my-4 text-white w-full flex justify-between bg-slate-950">
                 <div className="p-4 w-full flex justify-between">
-                  <span className="capitilaze">{name}</span>
-                  <span>${price}</span>
+                  <span className="capitilaze">{item.name}</span>
+                  <span>${item.price}</span>
                 </div>
-                <button className="ml-8 p-4 border-1-2 border-slate">X</button>
+                <button 
+                 className="ml-8 p-4 border-1-2 border-slate"
+                 
+                
+
+                >X</button>
               </li>
             )
 
