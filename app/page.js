@@ -1,7 +1,7 @@
 "use client"
 import React, {useState, useEffect} from "react"
 import { db } from "./firebase"
-import { collection, addDoc, getDocs, onSnapshot, querySnapShot, query } from "firebase/firestore";
+import { collection, addDoc, getDocs, onSnapshot, querySnapShot, query, doc, deleteDoc } from "firebase/firestore";
 
 export default function Home() {
   const [items, setItems] = useState([
@@ -46,6 +46,10 @@ return() => unsubscribe();
 },[])
 
   // delete item from database
+  const deleteItem = async (id) => {
+    await deleteDoc(doc(db, "items", id));
+  }
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between sm:p-24 p-24">
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm ">
@@ -77,7 +81,7 @@ return() => unsubscribe();
                 </div>
                 <button 
                  className="ml-8 p-4 border-1-2 border-slate"
-                 
+                 onClick={() => deleteItem(item.id)}
                 
 
                 >X</button>
